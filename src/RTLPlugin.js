@@ -11,10 +11,10 @@ export default {
           return document.body.classList
         },
         enableRTL() {
-          this.isRTL = true;
-          this.getDocClasses().add('rtl');
-          this.getDocClasses().add('menu-on-right');
-          this.toggleBootstrapRTL(true);
+          // this.isRTL = true;
+          // this.getDocClasses().add('rtl');
+          // this.getDocClasses().add('menu-on-right');
+          // this.toggleBootstrapRTL(true);
         },
         disableRTL() {
           this.isRTL = false;

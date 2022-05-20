@@ -15,7 +15,7 @@
             <span class="navbar-toggler-bar bar3"></span>
           </button>
         </div>
-        <a class="navbar-brand" href="javascript:void(0)"> {{ $route.name }}</a>
+        <a class="navbar-brand" href="javascript:void(0)" style="text-align: center"> {{ $route.name }}</a>
       </div>
 
       <div class="collapse navbar-collapse show text-left" v-show="showMenu">

@@ -20,10 +20,10 @@
     "usersTable": {
       "title": "Simple Table",
       "columns": [
-        "Name",
-        "Country",
-        "City",
-        "Salary"
+        "title",
+        "tag",
+        "view count",
+        "link"
       ],
       "data": [
         {
@@ -119,7 +119,6 @@
     "notifications": "Notifications",
     "userProfile": "User Profile",
     "tableList": "Table List",
-    "typography": "Typography",
-    "rtlSupport": "RTL Support"
+    "typography": "Typography"
   }
 }
