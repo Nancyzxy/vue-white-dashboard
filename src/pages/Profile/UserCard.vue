@@ -10,11 +10,11 @@
         <h5 class="title">{{ user.fullName }}</h5>
       </a>
       <p class="description">
-        {{user.title}}
+        {{ user.title }}
       </p>
     </div>
     <p class="card-description">
-      {{user.description}}
+      {{ user.description }}
     </p>
     <div slot="footer" class="button-container">
       <base-button icon round class="btn-facebook">
@@ -34,7 +34,7 @@ import {
   Card
 } from "@/components/index";
 
-import BaseButton from '@/components/BaseButton';
+import BaseButton from "@/components/BaseButton";
 
 export default {
   components: {

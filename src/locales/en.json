@@ -111,12 +111,12 @@
     ]
   },
   "sidebar": {
-    "title": "CS209 Project",
-    "shortTitle": "JAVA2",
-    "dashboard": "Overview",
-    "icons": "JAVA",
-    "maps": "PYTHON",
-    "notifications": "C",
+    "title": "Creative Tim",
+    "shortTitle": "CT",
+    "dashboard": "dashboard",
+    "icons": "Icons",
+    "maps": "Maps",
+    "notifications": "Notifications",
     "userProfile": "User Profile",
     "tableList": "Table List",
     "typography": "Typography",
