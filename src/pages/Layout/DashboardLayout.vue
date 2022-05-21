@@ -7,12 +7,18 @@
           <p>Overview</p>
         </template>
       </sidebar-link>
-      <sidebar-link to="/typography">
-        <i class="tim-icons icon-align-center"></i>
+      <sidebar-link to="/questionlist">
+        <i class="tim-icons icon-puzzle-10"></i>
         <template>
-          <p>Questionlist</p>
+          <p>QUESTIONLIST</p>
         </template>
       </sidebar-link>
+<!--      <sidebar-link to="/typography">-->
+<!--        <i class="tim-icons icon-align-center"></i>-->
+<!--        <template>-->
+<!--          <p>Questionlist</p>-->
+<!--        </template>-->
+<!--      </sidebar-link>-->
       <sidebar-link to="/icons">
         <i class="tim-icons icon-atom"></i>
         <template>
@@ -35,12 +41,6 @@
         <i class="tim-icons icon-single-02"></i>
         <template>
           <p>CC++</p>
-        </template>
-      </sidebar-link>
-      <sidebar-link to="/table">
-        <i class="tim-icons icon-puzzle-10"></i>
-        <template>
-          <p>OTHER</p>
         </template>
       </sidebar-link>
     </side-bar>

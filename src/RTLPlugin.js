@@ -18,8 +18,8 @@ export default {
         },
         disableRTL() {
           this.isRTL = false;
-          this.getDocClasses().remove('rtl');
-          this.getDocClasses().remove('menu-on-right');
+          this.getDocClasses().remove("rtl");
+          this.getDocClasses().remove("menu-on-right");
           this.toggleBootstrapRTL(false);
         },
         toggleBootstrapRTL(value) {
