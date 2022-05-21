@@ -32,6 +32,8 @@ import RTLPlugin from "./RTLPlugin";
 import Notify from "@/components/NotificationPlugin";
 import i18n from "./i18n"
 import SideBar from "@/components/SidebarPlugin";
+import ElementUI from "element-ui";
+import "element-ui/lib/theme-chalk/index.css";
 
 
 Vue.config.productionTip = false;
@@ -39,12 +41,14 @@ Vue.config.productionTip = false;
 // router setup
 import routes from "./router";
 
+import "./plugins/element.js";
+
 // configure router
 const router = new VueRouter({
   routes, // short for routes: routes
   linkExactActiveClass: "active"
 });
-
+Vue.use(ElementUI);
 Vue.use(VueRouter);
 Vue.use(SocialSharing);
 Vue.use(VueGitHubButtons, { useCache: true });
