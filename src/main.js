@@ -30,11 +30,13 @@ import GlobalComponents from "./globalComponents";
 import GlobalDirectives from "./globalDirectives";
 import RTLPlugin from "./RTLPlugin";
 import Notify from "@/components/NotificationPlugin";
-import i18n from "./i18n"
+import i18n from "./i18n";
 import SideBar from "@/components/SidebarPlugin";
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
-
+import axios from "axios";
+import VueAxios from "vue-axios";
+Vue.prototype.$axios = axios;
 
 Vue.config.productionTip = false;
 
@@ -48,6 +50,7 @@ const router = new VueRouter({
   routes, // short for routes: routes
   linkExactActiveClass: "active"
 });
+Vue.use(VueAxios, axios);
 Vue.use(ElementUI);
 Vue.use(VueRouter);
 Vue.use(SocialSharing);
@@ -57,7 +60,6 @@ Vue.use(GlobalDirectives);
 Vue.use(RTLPlugin);
 Vue.use(SideBar);
 Vue.use(Notify);
-
 new Vue({
   router,
   i18n,

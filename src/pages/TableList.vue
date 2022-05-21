@@ -16,15 +16,13 @@
             </base-table>
           </div>
           <div class="block">
-            <span class="demonstration">完整功能</span>
             <el-pagination
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :current-page="currentPage4"
-                :page-sizes="[100, 200, 300, 400]"
-                :page-size="100"
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="400">
+              @current-change="handleCurrentChange"
+              :current-page="1"
+              :page-size="20"
+              layout="total, prev, pager, next, jumper"
+              :total="400"
+            >
             </el-pagination>
           </div>
         </card>
@@ -36,6 +34,7 @@
 import { Card } from "@/components/index";
 
 import BaseTable from "@/components/BaseTable";
+import axios from "axios";
 
 const tableColumns = ["title", "tag", "view_count", "link"];
 const tableData = [
@@ -54,12 +53,18 @@ export default {
     BaseTable
   },
   methods: {
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
-    },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
     }
+  },
+  mounted() {
+    axios
+      .get("http://localhost:8080/getQuestionsList/20")
+      .then(res => console.log(res))
+      .catch(function(error) {
+        // 请求失败处理
+        console.log(error);
+      });
   },
   data() {
     return {

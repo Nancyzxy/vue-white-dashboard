@@ -47,6 +47,9 @@
         if(this.inline){
           return `form-check-inline`
         }
+        else{
+          return ''
+        }
       }
     },
     created(){
