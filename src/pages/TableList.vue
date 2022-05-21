@@ -8,20 +8,34 @@
             <h5 class="card-category">sorted by view_count.</h5>
           </template>
           <div class="table-responsive text-left">
-            <base-table
-              :data="table.data"
-              :columns="table.columns"
-              thead-classes="text-primary"
-            >
-            </base-table>
+            <el-table border stripe :data="data" style="width: 100%">
+              <el-table-column prop="question_title" label="title" width="360">
+              </el-table-column>
+              <el-table-column
+                prop="tags"
+                label="tags"
+                width="180"
+                :formatter="fileData"
+              >
+              </el-table-column>
+              <el-table-column prop="question_link" label="link">
+                <template v-slot="scope">
+                  <a :href="scope.row.question_link">
+                    {{ scope.row.question_link }}
+                  </a>
+                </template>
+              </el-table-column>
+              <el-table-column prop="view_count" label="view_count" width="120">
+              </el-table-column>
+            </el-table>
           </div>
           <div class="block">
             <el-pagination
               @current-change="handleCurrentChange"
-              :current-page="1"
-              :page-size="20"
+              :current-page="currentPage"
+              :page-size="10"
               layout="total, prev, pager, next, jumper"
-              :total="400"
+              :total="500000"
             >
             </el-pagination>
           </div>
@@ -33,46 +47,46 @@
 <script>
 import { Card } from "@/components/index";
 
-import BaseTable from "@/components/BaseTable";
 import axios from "axios";
-
-const tableColumns = ["title", "tag", "view_count", "link"];
-const tableData = [
-  {
-    id: 1,
-    title: "Dakota Rice",
-    tag: "$36.738",
-    view_count: "Niger",
-    link: "Oud-Turnhout"
-  }
-];
 
 export default {
   components: {
-    Card,
-    BaseTable
+    Card
   },
   methods: {
+    fileData(row) {
+      let arr = [];
+      // eslint-disable-next-line no-unused-vars
+      row.tags.forEach((item, _) => {
+        arr.push(item);
+      });
+      return arr.join(", ");
+    },
+
     handleCurrentChange(val) {
+      this.currentPage = val;
       console.log(`当前页: ${val}`);
+      this.flash();
+    },
+    flash() {
+      axios
+        .get("/getQuestionsList/10/" + this.currentPage.toString())
+        .then(res => {
+          this.data = res.data;
+          console.log(res);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     }
   },
   mounted() {
-    axios
-      .get("http://localhost:8080/getQuestionsList/20")
-      .then(res => console.log(res))
-      .catch(function(error) {
-        // 请求失败处理
-        console.log(error);
-      });
+    this.flash();
   },
   data() {
     return {
-      table: {
-        columns: [...tableColumns],
-        data: [...tableData],
-        currentPage: 4
-      }
+      data: [],
+      currentPage: 1
     };
   }
 };
