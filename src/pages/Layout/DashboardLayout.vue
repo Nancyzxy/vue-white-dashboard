@@ -40,7 +40,7 @@
       <sidebar-link to="/user">
         <i class="tim-icons icon-single-02"></i>
         <template>
-          <p>CC++</p>
+          <p>C/C++</p>
         </template>
       </sidebar-link>
     </side-bar>
