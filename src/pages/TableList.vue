@@ -4,8 +4,54 @@
       <div class="col-12">
         <card>
           <template slot="header">
-            <h4 class="card-title">All questions are listed here!</h4>
-            <h5 class="card-category">sorted by view_count.</h5>
+            <div class="col-sm-6">
+              <h4 class="card-title">All questions are listed here!</h4>
+              <h5 class="card-category">sorted by view_count.</h5>
+            </div>
+            <div class="col-sm-6">
+              <ul class="navbar-nav" :class="'ml-auto'">
+                <li
+                  class="search-bar input-group"
+                  @click="searchModalVisible = true"
+                >
+                  <button
+                    class="btn btn-link"
+                    id="search-button"
+                    data-toggle="modal"
+                    data-target="#searchModal"
+                  >
+                    <i class="tim-icons icon-zoom-split"></i>
+                    <span class="d-lg-none d-md-block">Search</span>
+                  </button>
+                </li>
+                <modal
+                  :show.sync="searchModalVisible"
+                  class="modal-search"
+                  id="searchModal"
+                  :centered="false"
+                  :show-close="true"
+                >
+                  <div class="col-sm-6">
+                    <input
+                      slot="header"
+                      v-model="searchQuery"
+                      type="text"
+                      class="form-control"
+                      id="inlineFormInputGroup"
+                      placeholder="SEARCH"
+                    />
+                  </div>
+                  <div class="col-sm-6">
+                    <el-button
+                      type="success"
+                      icon="el-icon-check"
+                      circle
+                      @click="searchClick"
+                    ></el-button>
+                  </div>
+                </modal>
+              </ul>
+            </div>
           </template>
           <div class="table-responsive text-left">
             <el-table border stripe :data="data" style="width: 100%">
@@ -46,12 +92,13 @@
 </template>
 <script>
 import { Card } from "@/components/index";
-
+import Modal from "@/components/Modal.vue";
 import axios from "axios";
 
 export default {
   components: {
-    Card
+    Card,
+    Modal
   },
   methods: {
     fileData(row) {
@@ -62,22 +109,48 @@ export default {
       });
       return arr.join(", ");
     },
-
-    handleCurrentChange(val) {
-      this.currentPage = val;
-      console.log(`当前页: ${val}`);
-      this.flash();
-    },
-    flash() {
+    searchClick() {
+      this.searchModalVisible = false;
+      this.currentPage = 1;
+      this.flag = 2;
+      console.log("search title");
+      console.log(this.searchQuery);
       axios
-        .get("/getQuestionsList/10/" + this.currentPage.toString())
+        .get("/search/" + this.searchQuery + "/question/10/" + this.currentPage)
         .then(res => {
-          this.data = res.data;
           console.log(res);
+          this.data = res.data;
         })
         .catch(function(error) {
           console.log(error);
         });
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      this.flash();
+    },
+    flash() {
+      if (this.flag === 1) {
+        axios
+          .get("/getQuestionsList/10/" + this.currentPage.toString())
+          .then(res => {
+            this.data = res.data;
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+      } else {
+        axios
+          .get(
+            "/search/" + this.searchQuery + "/question/10/" + this.currentPage
+          )
+          .then(res => {
+            this.data = res.data;
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+      }
     }
   },
   mounted() {
@@ -85,6 +158,9 @@ export default {
   },
   data() {
     return {
+      flag: 1, //indicate whether is a search result.
+      searchModalVisible: false,
+      searchQuery: "",
       data: [],
       currentPage: 1
     };
