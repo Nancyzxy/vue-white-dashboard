@@ -5,7 +5,7 @@ import Icons from "@/pages/Icons.vue";
 import Maps from "@/pages/Maps.vue";
 import Notifications from "@/pages/Notifications.vue";
 import UserProfile from "@/pages/UserProfile.vue";
-import TableList from "@/pages/TableList.vue";
+import QuestionList from "@/pages/QuestionList.vue";
 import Typography from "@/pages/Typography.vue";
 
 const routes = [
@@ -42,7 +42,7 @@ const routes = [
       {
         path: "questionlist",
         name: "Question List",
-        component: TableList
+        component: QuestionList
       },
       {
         path: "typography",

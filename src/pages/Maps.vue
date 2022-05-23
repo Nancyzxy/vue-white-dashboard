@@ -1,232 +1,381 @@
 <template>
   <div class="content">
-    <card type="plain">
+    <div class="row">
+      <card type="chart">
+        <template slot="header">
+          <div class="row">how they are scored?</div>
+        </template>
+        <el-row>
+          <div id="barChart" style="width:100%; height:400px;"></div>
+        </el-row>
+      </card>
+    </div>
+    <div class="row">
+      <div class="col-lg-5 col-md-12" :class="'text-left'">
+        <card type="chart" cardCol>
+          <template slot="header">
+            <h3 class="card-title">
+              Percentage of answered questions
+            </h3>
+          </template>
+          <el-row>
+            <div id="chartPie" style="width:100%; height:400px;"></div>
+          </el-row>
+        </card>
+      </div>
+      <div class="col-lg-5 col-md-12">
+        <card type="chart" cardCol>
+          <template slot="header">
+            <h3 class="card-title">
+              Percentage of positive scored questions
+            </h3>
+          </template>
+          <el-row>
+            <div id="chartPie_" style="width:100%; height:400px;"></div>
+          </el-row>
+        </card>
+      </div>
+      <div class="col-lg-2 col-md-12">
+        <card type="chart" cardCol>
+          <template slot="header">
+            <h3 class="card-title">
+              Related Tags
+            </h3>
+          </template>
+          <el-row>
+            <el-tag
+              v-for="item in items"
+              :key="item.label"
+              :type="item.type"
+              effect="dark"
+            >
+              {{ item.label }}
+            </el-tag>
+          </el-row>
+        </card>
+      </div>
+    </div>
+    <card type="chart">
       <template slot="header">
-        <h4 class="card-title">Google Maps</h4>
+        <template>
+          <h3 class="card-title">Total Questions : {{ questionNum }}</h3>
+        </template>
       </template>
-      <div id="map" class="map">
+      <el-table border stripe :data="data" style="width: 100%">
+        <el-table-column prop="question_title" label="title" width="360">
+        </el-table-column>
+        <el-table-column prop="question_link" label="link">
+          <template v-slot="scope">
+            <a :href="scope.row.question_link">
+              {{ scope.row.question_link }}
+            </a>
+          </template>
+        </el-table-column>
+        <el-table-column prop="view_count" label="view_count" width="120">
+        </el-table-column>
+      </el-table>
+      <div class="block">
+        <el-pagination
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-size="5"
+          layout="total, prev, pager, next, jumper"
+          :total="500000"
+        >
+        </el-pagination>
       </div>
     </card>
   </div>
 </template>
 <script>
+import { Card } from "@/components/index";
+import echarts from "echarts";
+import axios from "axios";
 
-import {
-  Card
-} from "@/components/index";
-
-export default{
-  components:{
+export default {
+  components: {
     Card
   },
-  mounted() {
-    let myLatlng = new window.google.maps.LatLng(40.748817, -73.985428);
-    let mapOptions = {
-      zoom: 13,
-      center: myLatlng,
-      scrollwheel: false, //we disable de scroll over the map, it is a really annoing when you scroll through page
-      styles: [{
-        "elementType": "geometry",
-        "stylers": [{
-          "color": "#1d2c4d"
-        }]
-      },
-        {
-          "elementType": "labels.text.fill",
-          "stylers": [{
-            "color": "#8ec3b9"
-          }]
-        },
-        {
-          "elementType": "labels.text.stroke",
-          "stylers": [{
-            "color": "#1a3646"
-          }]
-        },
-        {
-          "featureType": "administrative.country",
-          "elementType": "geometry.stroke",
-          "stylers": [{
-            "color": "#4b6878"
-          }]
-        },
-        {
-          "featureType": "administrative.land_parcel",
-          "elementType": "labels.text.fill",
-          "stylers": [{
-            "color": "#64779e"
-          }]
-        },
-        {
-          "featureType": "administrative.province",
-          "elementType": "geometry.stroke",
-          "stylers": [{
-            "color": "#4b6878"
-          }]
-        },
-        {
-          "featureType": "landscape.man_made",
-          "elementType": "geometry.stroke",
-          "stylers": [{
-            "color": "#334e87"
-          }]
-        },
-        {
-          "featureType": "landscape.natural",
-          "elementType": "geometry",
-          "stylers": [{
-            "color": "#023e58"
-          }]
-        },
-        {
-          "featureType": "poi",
-          "elementType": "geometry",
-          "stylers": [{
-            "color": "#283d6a"
-          }]
-        },
-        {
-          "featureType": "poi",
-          "elementType": "labels.text.fill",
-          "stylers": [{
-            "color": "#6f9ba5"
-          }]
-        },
-        {
-          "featureType": "poi",
-          "elementType": "labels.text.stroke",
-          "stylers": [{
-            "color": "#1d2c4d"
-          }]
-        },
-        {
-          "featureType": "poi.park",
-          "elementType": "geometry.fill",
-          "stylers": [{
-            "color": "#023e58"
-          }]
-        },
-        {
-          "featureType": "poi.park",
-          "elementType": "labels.text.fill",
-          "stylers": [{
-            "color": "#3C7680"
-          }]
-        },
-        {
-          "featureType": "road",
-          "elementType": "geometry",
-          "stylers": [{
-            "color": "#304a7d"
-          }]
-        },
-        {
-          "featureType": "road",
-          "elementType": "labels.text.fill",
-          "stylers": [{
-            "color": "#98a5be"
-          }]
-        },
-        {
-          "featureType": "road",
-          "elementType": "labels.text.stroke",
-          "stylers": [{
-            "color": "#1d2c4d"
-          }]
-        },
-        {
-          "featureType": "road.highway",
-          "elementType": "geometry",
-          "stylers": [{
-            "color": "#2c6675"
-          }]
-        },
-        {
-          "featureType": "road.highway",
-          "elementType": "geometry.fill",
-          "stylers": [{
-            "color": "#9d2a80"
-          }]
-        },
-        {
-          "featureType": "road.highway",
-          "elementType": "geometry.stroke",
-          "stylers": [{
-            "color": "#9d2a80"
-          }]
-        },
-        {
-          "featureType": "road.highway",
-          "elementType": "labels.text.fill",
-          "stylers": [{
-            "color": "#b0d5ce"
-          }]
-        },
-        {
-          "featureType": "road.highway",
-          "elementType": "labels.text.stroke",
-          "stylers": [{
-            "color": "#023e58"
-          }]
-        },
-        {
-          "featureType": "transit",
-          "elementType": "labels.text.fill",
-          "stylers": [{
-            "color": "#98a5be"
-          }]
-        },
-        {
-          "featureType": "transit",
-          "elementType": "labels.text.stroke",
-          "stylers": [{
-            "color": "#1d2c4d"
-          }]
-        },
-        {
-          "featureType": "transit.line",
-          "elementType": "geometry.fill",
-          "stylers": [{
-            "color": "#283d6a"
-          }]
-        },
-        {
-          "featureType": "transit.station",
-          "elementType": "geometry",
-          "stylers": [{
-            "color": "#3a4762"
-          }]
-        },
-        {
-          "featureType": "water",
-          "elementType": "geometry",
-          "stylers": [{
-            "color": "#0e1626"
-          }]
-        },
-        {
-          "featureType": "water",
-          "elementType": "labels.text.fill",
-          "stylers": [{
-            "color": "#4e6d70"
-          }]
-        }
-      ]
+  data() {
+    return {
+      data: [],
+      items: [
+        { type: "", label: "" },
+        { type: "success", label: "" },
+        { type: "info", label: "" },
+        { type: "danger", label: "" },
+        { type: "warning", label: "" }
+      ],
+      range: [
+        "<0",
+        "0-100",
+        "100-500",
+        "500-1000",
+        "1000-5000",
+        "5000-10000",
+        ">10000"
+      ],
+      currentPage: 1,
+      chartPie: null,
+      answer: 0,
+      notAnswered: 0,
+      positiveScored: 0,
+      negativeScored: 0,
+      questionNum: 0,
+      barData: []
     };
-    let map = new window.google.maps.Map(
-      document.getElementById("map"),
-      mapOptions
-    );
-
-    let marker = new window.google.maps.Marker({
-      position: myLatlng,
-      title: "Hello World!"
-    });
-
-    // To add the marker to the map, call setMap();
-    marker.setMap(map);
+  },
+  methods: {
+    getQuestionCount() {
+      axios
+        .get("/java/question_count")
+        .then(res => {
+          this.questionNum = res.data;
+          this.getAnswered();
+          this.getScore();
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    getAnswered() {
+      axios
+        .get("/java/getScoreCountLarger0")
+        .then(res => {
+          this.answer = res.data;
+          this.notAnswered = this.questionNum - this.answer;
+          this.drawPieChart();
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    drawPieChart() {
+      this.chartPie = echarts.init(document.getElementById("chartPie"));
+      this.chartPie.setOption({
+        title: {},
+        tooltip: {
+          trigger: "item",
+          formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+          orient: "vertical",
+          left: "right",
+          data: ["answered", "not answered"]
+        },
+        series: [
+          {
+            name: "questions that are",
+            type: "pie",
+            radius: "55%",
+            center: ["50%", "60%"],
+            data: [
+              { value: this.answer, name: "answered" },
+              { value: this.notAnswered, name: "not answered" }
+            ],
+            itemStyle: {
+              emphasis: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: "rgba(0, 0, 0, 0.5)"
+              }
+            }
+          }
+        ]
+      });
+    },
+    getScore() {
+      axios
+        .get("/java/getAnswerCountLarger0")
+        .then(res => {
+          this.positiveScored = res.data;
+          this.negativeScored = this.questionNum - this.positiveScored;
+          this.drawPieChart_();
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    drawPieChart_() {
+      this.chartPie = echarts.init(document.getElementById("chartPie_"));
+      this.chartPie.setOption({
+        title: {},
+        tooltip: {
+          trigger: "item",
+          formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+          orient: "vertical",
+          left: "right",
+          data: ["positiveScored", "negativeScored"]
+        },
+        series: [
+          {
+            name: "questions that are",
+            type: "pie",
+            radius: "55%",
+            center: ["50%", "60%"],
+            data: [
+              { value: this.positiveScored, name: "positive" },
+              { value: this.negativeScored, name: "negative" }
+            ],
+            itemStyle: {
+              emphasis: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: "rgba(0, 0, 0, 0.5)"
+              }
+            }
+          }
+        ]
+      });
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      this.flash();
+    },
+    flash() {
+      axios
+        .get("/java/question/5/" + this.currentPage)
+        .then(res => {
+          this.data = res.data;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    barGraph() {
+      var myChart = echarts.init(document.getElementById("barChart"));
+      let category = [
+        this.range[0],
+        this.range[1],
+        this.range[2],
+        this.range[3],
+        this.range[4],
+        this.range[5],
+        this.range[6]
+      ];
+      let barData = this.barData;
+      let option = {
+        title: {
+          text: " The score of the questions"
+        },
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            type: "shadow"
+          }
+        },
+        grid: {
+          left: "3%",
+          right: "4%",
+          bottom: "3%",
+          containLabel: true
+        },
+        xAxis: {
+          type: "value",
+          axisLine: {
+            show: false
+          },
+          axisTick: {
+            show: false
+          },
+          splitLine: { show: false },
+          axisLabel: { show: false }
+        },
+        yAxis: {
+          type: "category",
+          data: category,
+          splitLine: { show: false },
+          axisLine: {
+            show: false
+          },
+          axisTick: {
+            show: false
+          },
+          offset: 10,
+          nameTextStyle: {
+            fontSize: 10
+          }
+        },
+        series: [
+          {
+            name: "Number",
+            type: "bar",
+            data: barData,
+            barWidth: 14,
+            barGap: 10,
+            smooth: true,
+            label: {
+              normal: {
+                show: true,
+                position: "right",
+                offset: [5, -2],
+                textStyle: {
+                  color: "#333",
+                  fontSize: 13
+                }
+              }
+            },
+            itemStyle: {
+              emphasis: {
+                barBorderRadius: 7
+              },
+              normal: {
+                barBorderRadius: 7,
+                color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                  { offset: 0, color: "#3977E6" },
+                  { offset: 1, color: "#37BBF8" }
+                ])
+              }
+            }
+          }
+        ]
+      };
+      myChart.setOption(option);
+      window.addEventListener("resize", function() {
+        myChart.resize();
+      });
+    },
+    getRelatedTags() {
+      axios
+        .get("tag/java/5/relation")
+        .then(res => {
+          for (let i = 0; i < res.data.length; i++) {
+            this.items[i].label = res.data[i].name;
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    getBarData() {
+      let limit = [-20, 0, 100, 500, 1000, 5000, 10000, 20000];
+      for (let i = 0; i < limit.length - 1; i++) {
+        axios
+          .get("/tag/java/" + limit[i] + "/" + limit[i + 1] + "/score")
+          .then(res => {
+            console.log(
+              "/tag/java/" + limit[i] + "/" + limit[i + 1] + "/score"
+            );
+            console.log(res);
+            this.barData.push(res.data);
+            this.barGraph();
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+      }
+    }
+  },
+  created() {
+    this.getQuestionCount();
+  },
+  mounted() {
+    this.flash();
+    this.getBarData();
+    this.getRelatedTags();
   }
-}
+};
 </script>
-<style>
-</style>
+<style></style>
