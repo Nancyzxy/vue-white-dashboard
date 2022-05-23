@@ -4,56 +4,76 @@
       <div class="col-12">
         <card>
           <template slot="header">
-            <div class="col-sm-6">
-              <h4 class="card-title">Here are all tags we have!</h4>
+            <div class="el-row">
+              <h2 class="card-title">Here are all tags we have!</h2>
             </div>
-            <div class="col-sm-6">
-              <ul class="navbar-nav" :class="'ml-auto'">
-                <li
-                  class="search-bar input-group"
-                  @click="searchModalVisible = true"
-                >
-                  <button
-                    class="btn btn-link"
-                    id="search-button"
-                    data-toggle="modal"
-                    data-target="#searchModal"
-                  >
-                    <i class="tim-icons icon-zoom-split"></i>
-                    <span class="d-lg-none d-md-block">Search</span>
-                  </button>
-                </li>
-                <modal
-                  :show.sync="searchModalVisible"
-                  class="modal-search"
-                  id="searchModal"
-                  :centered="false"
-                  :show-close="true"
-                >
-                  <div class="col-sm-6">
-                    <input
-                      slot="header"
-                      v-model="searchQuery"
-                      type="text"
-                      class="form-control"
-                      id="inlineFormInputGroup"
-                      placeholder="SEARCH"
-                    />
-                  </div>
-                  <div class="col-sm-6">
-                    <el-button
-                      type="success"
-                      icon="el-icon-check"
-                      circle
-                      @click="searchClick"
-                    ></el-button>
-                  </div>
-                </modal>
-              </ul>
+            <div class="el-row">
+              <div class="col-sm-6">
+                <input
+                  slot="header"
+                  v-model="searchQuery"
+                  type="text"
+                  class="form-control"
+                  id="inlineFormInputGroup"
+                  placeholder="SEARCH"
+                />
+              </div>
+              <div class="col-sm-6" :class="'text-right'">
+                <el-button
+                  type="success"
+                  icon="el-icon-check"
+                  circle
+                  @click="searchClick"
+                ></el-button>
+              </div>
             </div>
           </template>
-          <div>
-            <div id="wordCloud" style="height: 400px; width: 100%}"></div>
+          <div v-show="this.flag == 1">
+            <div id="wordCloud" style="height: 700px; width: 70%}">
+              {{ this.flag }}
+            </div>
+          </div>
+          <div v-show="this.flag == 2">
+            <div class="table-responsive text-left">
+              <el-table border stripe :data="data" style="width: 100%">
+                <el-table-column
+                  prop="question_title"
+                  label="title"
+                  width="360"
+                >
+                </el-table-column>
+                <el-table-column
+                  prop="tags"
+                  label="tags"
+                  width="180"
+                  :formatter="fileData"
+                >
+                </el-table-column>
+                <el-table-column prop="question_link" label="link">
+                  <template v-slot="scope">
+                    <a :href="scope.row.question_link">
+                      {{ scope.row.question_link }}
+                    </a>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="view_count"
+                  label="view_count"
+                  width="120"
+                >
+                </el-table-column>
+              </el-table>
+            </div>
+            <div class="block">
+              <el-pagination
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-size="10"
+                layout="total, prev, pager, next, jumper"
+                :total="500000"
+              >
+              </el-pagination>
+            </div>
           </div>
         </card>
       </div>
@@ -62,23 +82,18 @@
 </template>
 <script>
 import { Card } from "@/components/index";
-import Modal from "@/components/Modal.vue";
 import axios from "axios";
 import "echarts-wordcloud";
 import echarts from "echarts";
 
 export default {
   components: {
-    Card,
-    Modal
+    Card
   },
   methods: {
     searchClick() {
-      this.searchModalVisible = false;
       this.currentPage = 1;
       this.flag = 2;
-      console.log("search title");
-      console.log(this.searchQuery);
       axios
         .get("/search/" + this.searchQuery + "/question/10/" + this.currentPage)
         .then(res => {
@@ -90,27 +105,18 @@ export default {
         });
     },
     flash() {
-      if (this.flag === 1) {
-        axios
-          .get("/getQuestionsList/10/" + this.currentPage.toString())
-          .then(res => {
-            this.data = res.data;
-          })
-          .catch(function(error) {
-            console.log(error);
-          });
-      } else {
-        axios
-          .get(
-            "/search/" + this.searchQuery + "/question/10/" + this.currentPage
-          )
-          .then(res => {
-            this.data = res.data;
-          })
-          .catch(function(error) {
-            console.log(error);
-          });
-      }
+      axios
+        .get("/getQuestionsList/10/" + this.currentPage.toString())
+        .then(res => {
+          this.data = res.data;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      this.flash();
     },
     initChart() {
       let myChart = echarts.init(document.getElementById("wordCloud"));
@@ -150,7 +156,7 @@ export default {
     },
     get50Tags() {
       axios
-        .get("/getTopTags/100")
+        .get("/getTopTags/70")
         .then(res => {
           console.log(res);
           for (let i = 0; i < res.data.length; i++) {
@@ -164,12 +170,12 @@ export default {
     }
   },
   mounted() {
+    this.flash();
     this.get50Tags();
   },
   data() {
     return {
       flag: 1, //indicate whether is a search result.
-      searchModalVisible: false,
       searchQuery: "",
       data: [],
       currentPage: 1,
@@ -239,41 +245,11 @@ export default {
         { value: "15", name: "" },
         { value: "14", name: "" },
         { value: "13", name: "" },
-        { value: "12", name: "" },
-        { value: "11", name: "" },
-        { value: "10", name: "" },
-        { value: "9", name: "" },
-        { value: "30", name: "" },
-        { value: "29", name: "" },
-        { value: "28", name: "" },
-        { value: "27", name: "" },
-        { value: "26", name: "" },
-        { value: "25", name: "" },
-        { value: "24", name: "" },
-        { value: "23", name: "" },
-        { value: "22", name: "" },
-        { value: "21", name: "" },
         { value: "20", name: "" },
         { value: "16", name: "" },
         { value: "15", name: "" },
         { value: "14", name: "" },
-        { value: "13", name: "" },
-        { value: "12", name: "" },
-        { value: "11", name: "" },
-        { value: "10", name: "" },
-        { value: "9", name: "" },
-        { value: "30", name: "" },
-        { value: "29", name: "" },
-        { value: "28", name: "" },
-        { value: "27", name: "" },
-        { value: "26", name: "" },
-        { value: "25", name: "" },
-        { value: "24", name: "" },
-        { value: "23", name: "" },
-        { value: "22", name: "" },
-        { value: "21", name: "" },
-        { value: "20", name: "" },
-        { value: "16", name: "" }
+        { value: "13", name: "" }
       ]
     };
   }

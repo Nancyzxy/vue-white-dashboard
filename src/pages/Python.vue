@@ -3,7 +3,9 @@
     <div class="row">
       <card type="chart">
         <template slot="header">
-          <div class="row">how they are scored?</div>
+          <el-tag>
+            Python
+          </el-tag>
         </template>
         <el-row>
           <div id="barChart" style="width:100%; height:400px;"></div>

@@ -37,7 +37,7 @@
           <p>PYTHON</p>
         </template>
       </sidebar-link>
-      <sidebar-link to="/user">
+      <sidebar-link to="/other">
         <i class="tim-icons icon-bell-55"></i>
         <template>
           <p>OTHER</p>

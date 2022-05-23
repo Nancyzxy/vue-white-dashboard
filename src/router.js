@@ -4,7 +4,7 @@ import Overview from "@/pages/Overview.vue";
 import Icons from "@/pages/Icons.vue";
 import Java from "@/pages/Java.vue";
 import Python from "@/pages/Python.vue";
-import UserProfile from "@/pages/UserProfile.vue";
+import Other from "@/pages/other.vue";
 import QuestionList from "@/pages/QuestionList.vue";
 import TagList from "@/pages/TagList.vue";
 
@@ -35,9 +35,9 @@ const routes = [
         component: Python
       },
       {
-        path: "user",
-        name: "User Profile",
-        component: UserProfile
+        path: "other",
+        name: "Other",
+        component: Other
       },
       {
         path: "questionlist",
