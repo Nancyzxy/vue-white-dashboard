@@ -116,16 +116,18 @@ export default {
         "QuestionCount",
         "ViewCount",
         "AnswerCount",
-        "Score"
+        "MaxScore",
+        "MinScore"
       ],
       descrption: [
         "This chart describes the number of questions the top 10 tags have.",
         "This chart describes the times the top 10 tags have been watched.",
         "This chart describes the number of answers the top 10 tags' questions have.",
-        "This chart describes the highest and lowest scores of the top 10 tags' questions."
+        "This chart describes the highest scores of the top 10 tags' questions.",
+        "This chart describes the lowermost scores of the top 10 tags' questions."
       ],
       BigBarGraph: {
-        allData: [[], [], [], []],
+        allData: [[], [], [], [], []],
         activeIndex: 0,
         chartData: { datasets: [{}] },
         extraOptions: chartConfigs.barChartOptions,
@@ -199,11 +201,14 @@ export default {
         .get("/getTopTags/10")
         .then(res => {
           let tags = res.data;
+          console.log(tags);
           for (let i = 0; i < tags.length; i++) {
             this.chartLabels.push(tags[i].name);
             this.BigBarGraph.allData[0].push(tags[i].question_cnt);
             this.BigBarGraph.allData[1].push(tags[i].view_count);
             this.BigBarGraph.allData[2].push(tags[i].answer_count);
+            this.BigBarGraph.allData[3].push(tags[i].max_score);
+            this.BigBarGraph.allData[4].push(tags[i].min_score);
           }
           this.initBigChart(0);
         })
@@ -298,8 +303,7 @@ export default {
     this.getQuestionCount();
     this.getTop10Tags();
   },
-  mounted() {
-  }
+  mounted() {}
 };
 </script>
 <style></style>
