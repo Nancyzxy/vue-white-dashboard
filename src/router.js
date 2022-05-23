@@ -2,7 +2,7 @@ import DashboardLayout from "@/pages/Layout/DashboardLayout.vue";
 
 import Dashboard from "@/pages/Dashboard.vue";
 import Icons from "@/pages/Icons.vue";
-import Maps from "@/pages/Maps.vue";
+import Java from "@/pages/Java.vue";
 import Notifications from "@/pages/Notifications.vue";
 import UserProfile from "@/pages/UserProfile.vue";
 import QuestionList from "@/pages/QuestionList.vue";
@@ -26,8 +26,8 @@ const routes = [
       },
       {
         path: "maps",
-        name: "Maps",
-        component: Maps
+        name: "Java",
+        component: Java
       },
       {
         path: "notifications",
