@@ -112,9 +112,11 @@ export default {
     searchClick() {
       this.searchModalVisible = false;
       this.currentPage = 1;
-      this.flag = 2;
-      this.getPageCount();
-      this.flash();
+      if (this.searchQuery !== "") {
+        this.flag = 2;
+        this.getPageCount();
+        this.flash();
+      }
     },
     handleCurrentChange(val) {
       this.currentPage = val;
