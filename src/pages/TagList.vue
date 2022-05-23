@@ -55,9 +55,11 @@
                 >
                 </el-table-column>
                 <el-table-column label="Analysis">
-                  <sidebar-link to="/other">
-                    Analysis
-                  </sidebar-link>
+                  <template v-slot="scope">
+                    <el-button @click="goToAnalysis(scope.row.name)">
+                      analysis
+                    </el-button>
+                  </template>
                 </el-table-column>
               </el-table>
             </div>
@@ -82,6 +84,7 @@ import { Card } from "@/components/index";
 import axios from "axios";
 import "echarts-wordcloud";
 import echarts from "echarts";
+import Vue from "vue";
 
 export default {
   components: {
@@ -165,6 +168,10 @@ export default {
         .catch(function(error) {
           console.log(error);
         });
+    },
+    goToAnalysis(val) {
+      Vue.prototype.$tag = val;
+      this.$router.push({ path: "/other" });
     }
   },
   mounted() {

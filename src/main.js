@@ -30,7 +30,7 @@ import "element-ui/lib/theme-chalk/index.css";
 import axios from "axios";
 import VueAxios from "vue-axios";
 Vue.prototype.$axios = axios;
-
+Vue.prototype.$tag = "Java";
 Vue.config.productionTip = false;
 
 // router setup
@@ -48,7 +48,7 @@ Vue.use(VueAxios, axios);
 Vue.use(ElementUI);
 Vue.use(VueRouter);
 Vue.use(SocialSharing);
-Vue.use(VueGitHubButtons, { useCache: true });
+Vue.use(VueGitHubButtons, { useCache: false });
 Vue.use(SideBar);
 new Vue({
   router,

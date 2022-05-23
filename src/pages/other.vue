@@ -101,7 +101,7 @@ export default {
   data() {
     return {
       data: [],
-      tag: "spring",
+      tag: this.$tag,
       items: [
         { type: "", label: "" },
         { type: "success", label: "" },
@@ -371,10 +371,6 @@ export default {
             "/tag/" + this.tag + "/" + limit[i] + "/" + limit[i + 1] + "/score"
           )
           .then(res => {
-            console.log(
-              "/tag/" + this.tag + +limit[i] + "/" + limit[i + 1] + "/score"
-            );
-            console.log(res);
             this.barData[i] = res.data;
             this.barGraph();
           })
