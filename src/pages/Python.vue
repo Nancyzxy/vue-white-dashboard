@@ -4,7 +4,7 @@
       <card type="chart">
         <template slot="header">
           <el-tag>
-            Python
+            {{ this.tag }}
           </el-tag>
         </template>
         <el-row>
@@ -46,10 +46,10 @@
           </template>
           <el-row>
             <el-tag
-              v-for="item in items"
-              :key="item.label"
-              :type="item.type"
-              effect="dark"
+                v-for="item in items"
+                :key="item.label"
+                :type="item.type"
+                effect="dark"
             >
               {{ item.label }}
             </el-tag>
@@ -78,11 +78,11 @@
       </el-table>
       <div class="block">
         <el-pagination
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-size="5"
-          layout="total, prev, pager, next, jumper"
-          :total="500000"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-size="this.pageSize"
+            layout="total, prev, pager, next, jumper"
+            :total="this.pageSize * this.pageCount"
         >
         </el-pagination>
       </div>
@@ -101,6 +101,7 @@ export default {
   data() {
     return {
       data: [],
+      tag: "Python",
       items: [
         { type: "", label: "" },
         { type: "success", label: "" },
@@ -135,37 +136,40 @@ export default {
       positiveScored: 0,
       negativeScored: 0,
       questionNum: 0,
-      barData: [0, 0, 0, 0, 0, 0, 0]
+      barData: [0, 0, 0, 0, 0, 0, 0],
+      pageCount: 0,
+      pageSize: 5,
+      relatedTagNum: 16
     };
   },
   methods: {
     getQuestionCount() {
       axios
-        .get("/python/question_count")
-        .then(res => {
-          this.questionNum = res.data;
-          this.getAnswered();
-          this.getScore();
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
+          .get("/" + this.tag + "/question_count")
+          .then(res => {
+            this.questionNum = res.data;
+            this.getAnswered();
+            this.getScore();
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
     },
     getAnswered() {
       axios
-        .get("/python/getScoreCountLarger0")
-        .then(res => {
-          this.answer = res.data;
-          this.notAnswered = this.questionNum - this.answer;
-          this.drawPieChart();
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
+          .get("/" + this.tag + "/getScoreCountLarger0")
+          .then(res => {
+            this.answer = res.data;
+            this.notAnswered = this.questionNum - this.answer;
+            this.drawPieChart();
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
     },
     drawPieChart() {
-      this.chartPie = echarts.init(document.getElementById("chartPie"));
-      this.chartPie.setOption({
+      let chartPie = echarts.init(document.getElementById("chartPie"));
+      chartPie.setOption({
         title: {},
         tooltip: {
           trigger: "item",
@@ -196,22 +200,25 @@ export default {
           }
         ]
       });
+      window.addEventListener("resize", function() {
+        chartPie.resize();
+      });
     },
     getScore() {
       axios
-        .get("/python/getAnswerCountLarger0")
-        .then(res => {
-          this.positiveScored = res.data;
-          this.negativeScored = this.questionNum - this.positiveScored;
-          this.drawPieChart_();
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
+          .get("/" + this.tag + "/getAnswerCountLarger0")
+          .then(res => {
+            this.positiveScored = res.data;
+            this.negativeScored = this.questionNum - this.positiveScored;
+            this.drawPieChart_();
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
     },
     drawPieChart_() {
-      this.chartPie = echarts.init(document.getElementById("chartPie_"));
-      this.chartPie.setOption({
+      let chartPie_ = echarts.init(document.getElementById("chartPie_"));
+      chartPie_.setOption({
         title: {},
         tooltip: {
           trigger: "item",
@@ -242,6 +249,9 @@ export default {
           }
         ]
       });
+      window.addEventListener("resize", function() {
+        chartPie_.resize();
+      });
     },
     handleCurrentChange(val) {
       this.currentPage = val;
@@ -249,13 +259,15 @@ export default {
     },
     flash() {
       axios
-        .get("/python/question/5/" + this.currentPage)
-        .then(res => {
-          this.data = res.data;
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
+          .get(
+              "/" + this.tag + "/question/" + this.pageSize + "/" + this.currentPage
+          )
+          .then(res => {
+            this.data = res.data;
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
     },
     barGraph() {
       var myChart = echarts.init(document.getElementById("barChart"));
@@ -352,39 +364,48 @@ export default {
     },
     getRelatedTags() {
       axios
-        .get("tag/python/16/relationQuick")
-        .then(res => {
-          for (let i = 0; i < res.data.length; i++) {
-            this.items[i].label = res.data[i].name;
-          }
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
+          .get("tag/" + this.tag + "/" + this.relatedTagNum + "/relationQuick")
+          .then(res => {
+            for (let i = 0; i < res.data.length; i++) {
+              this.items[i].label = res.data[i].name;
+            }
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
     },
     getBarData() {
       let limit = [-20, 0, 100, 500, 1000, 5000, 10000, 20000];
       for (let i = 0; i < limit.length - 1; i++) {
         axios
-          .get("/tag/python/" + limit[i] + "/" + limit[i + 1] + "/score")
+            .get(
+                "/tag/" + this.tag + "/" + limit[i] + "/" + limit[i + 1] + "/score"
+            )
+            .then(res => {
+              this.barData[i] = res.data;
+              this.barGraph();
+            })
+            .catch(function(error) {
+              console.log(error);
+            });
+      }
+    },
+    getPageCount() {
+      axios
+          .get("/" + this.tag + "/getPageCount/" + this.pageSize)
           .then(res => {
-            console.log(
-              "/tag/python/" + limit[i] + "/" + limit[i + 1] + "/score"
-            );
-            console.log(res);
-            this.barData[i] = res.data;
-            this.barGraph();
+            this.pageCount = res.data;
           })
           .catch(function(error) {
             console.log(error);
           });
-      }
     }
   },
   created() {
     this.getQuestionCount();
   },
   mounted() {
+    this.getPageCount();
     this.flash();
     this.getBarData();
     this.getRelatedTags();

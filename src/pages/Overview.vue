@@ -163,8 +163,8 @@ export default {
         });
     },
     drawPieChart() {
-      this.chartPie = echarts.init(document.getElementById("chartPie"));
-      this.chartPie.setOption({
+      let chartPie = echarts.init(document.getElementById("chartPie"));
+      chartPie.setOption({
         title: {},
         tooltip: {
           trigger: "item",
@@ -194,6 +194,9 @@ export default {
             }
           }
         ]
+      });
+      window.addEventListener("resize", function() {
+        chartPie.resize();
       });
     },
     getTop10Tags() {
@@ -264,8 +267,8 @@ export default {
         });
     },
     drawPieChart_() {
-      this.chartPie = echarts.init(document.getElementById("chartPie_"));
-      this.chartPie.setOption({
+      let chartPie_ = echarts.init(document.getElementById("chartPie_"));
+      chartPie_.setOption({
         title: {},
         tooltip: {
           trigger: "item",
@@ -295,6 +298,9 @@ export default {
             }
           }
         ]
+      });
+      window.addEventListener("resize", function() {
+        chartPie_.resize();
       });
     }
   },

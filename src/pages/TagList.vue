@@ -67,9 +67,9 @@
               <el-pagination
                 @current-change="handleCurrentChange"
                 :current-page="currentPage"
-                :page-size="10"
+                :page-size="this.pageSize"
                 layout="total, prev, pager, next, jumper"
-                :total="500000"
+                :total="this.pageCount * this.pageSize"
               >
               </el-pagination>
             </div>
@@ -94,6 +94,7 @@ export default {
     searchClick() {
       this.currentPage = 1;
       this.flag = 2;
+      this.getPageCount();
       this.flash();
     },
     flash() {
@@ -102,7 +103,9 @@ export default {
           .get(
             "/search/tag/" +
               this.searchQuery +
-              "/10/" +
+              "/" +
+              this.pageSize +
+              "/" +
               this.currentPage.toString()
           )
           .then(res => {
@@ -155,6 +158,9 @@ export default {
         ]
       };
       myChart.setOption(option);
+      window.addEventListener("resize", function() {
+        myChart.resize();
+      });
     },
     get50Tags() {
       axios
@@ -172,6 +178,16 @@ export default {
     goToAnalysis(val) {
       Vue.prototype.$tag = val;
       this.$router.push({ path: "/other" });
+    },
+    getPageCount() {
+      axios
+        .get("/search/tagPageCount/" + this.searchQuery + "/" + this.pageSize)
+        .then(res => {
+          this.pageCount = res.data;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     }
   },
   mounted() {
@@ -184,6 +200,8 @@ export default {
       searchQuery: "",
       data: [],
       currentPage: 1,
+      pageCount: 0,
+      pageSize: 10,
       echartsData: [
         { value: "30", name: "" },
         { value: "29", name: "" },

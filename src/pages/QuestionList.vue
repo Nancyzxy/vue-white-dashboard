@@ -79,9 +79,9 @@
             <el-pagination
               @current-change="handleCurrentChange"
               :current-page="currentPage"
-              :page-size="10"
+              :page-size="this.pageSize"
               layout="total, prev, pager, next, jumper"
-              :total="500000"
+              :total="this.pageCount * this.pageSize"
             >
             </el-pagination>
           </div>
@@ -113,17 +113,8 @@ export default {
       this.searchModalVisible = false;
       this.currentPage = 1;
       this.flag = 2;
-      console.log("search title");
-      console.log(this.searchQuery);
-      axios
-        .get("/search/" + this.searchQuery + "/question/10/" + this.currentPage)
-        .then(res => {
-          console.log(res);
-          this.data = res.data;
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
+      this.getPageCount();
+      this.flash();
     },
     handleCurrentChange(val) {
       this.currentPage = val;
@@ -132,7 +123,12 @@ export default {
     flash() {
       if (this.flag === 1) {
         axios
-          .get("/getQuestionsList/10/" + this.currentPage.toString())
+          .get(
+            "/getQuestionsList/" +
+              this.pageSize +
+              "/" +
+              this.currentPage.toString()
+          )
           .then(res => {
             this.data = res.data;
           })
@@ -142,7 +138,7 @@ export default {
       } else {
         axios
           .get(
-            "/search/" + this.searchQuery + "/question/10/" + this.currentPage
+            "/search/" + this.searchQuery + "/question/"+this.pageSize+"/" + this.currentPage
           )
           .then(res => {
             this.data = res.data;
@@ -151,9 +147,37 @@ export default {
             console.log(error);
           });
       }
+    },
+    getPageCount() {
+      if (this.flag === 1) {
+        axios
+          .get("/getPageCount/" + this.pageSize)
+          .then(res => {
+            this.pageCount = res.data;
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+      } else {
+        axios
+          .get(
+            "/search/" +
+              this.searchQuery +
+              "/questionPageCount/" +
+              this.pageSize
+          )
+          .then(res => {
+            console.log(res.data);
+            this.pageCount = res.data;
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+      }
     }
   },
   mounted() {
+    this.getPageCount();
     this.flash();
   },
   data() {
@@ -162,7 +186,9 @@ export default {
       searchModalVisible: false,
       searchQuery: "",
       data: [],
-      currentPage: 1
+      currentPage: 1,
+      pageCount: 0,
+      pageSize:10,
     };
   }
 };

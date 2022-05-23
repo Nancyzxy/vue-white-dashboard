@@ -4,7 +4,7 @@
       <card type="chart">
         <template slot="header">
           <el-tag>
-            Java
+            {{ this.tag }}
           </el-tag>
         </template>
         <el-row>
@@ -80,9 +80,9 @@
         <el-pagination
           @current-change="handleCurrentChange"
           :current-page="currentPage"
-          :page-size="5"
+          :page-size="this.pageSize"
           layout="total, prev, pager, next, jumper"
-          :total="500000"
+          :total="this.pageSize * this.pageCount"
         >
         </el-pagination>
       </div>
@@ -101,6 +101,7 @@ export default {
   data() {
     return {
       data: [],
+      tag: "Java",
       items: [
         { type: "", label: "" },
         { type: "success", label: "" },
@@ -135,13 +136,16 @@ export default {
       positiveScored: 0,
       negativeScored: 0,
       questionNum: 0,
-      barData: [0, 0, 0, 0, 0, 0, 0]
+      barData: [0, 0, 0, 0, 0, 0, 0],
+      pageCount: 0,
+      pageSize: 5,
+      relatedTagNum: 16
     };
   },
   methods: {
     getQuestionCount() {
       axios
-        .get("/java/question_count")
+        .get("/" + this.tag + "/question_count")
         .then(res => {
           this.questionNum = res.data;
           this.getAnswered();
@@ -153,7 +157,7 @@ export default {
     },
     getAnswered() {
       axios
-        .get("/java/getScoreCountLarger0")
+        .get("/" + this.tag + "/getScoreCountLarger0")
         .then(res => {
           this.answer = res.data;
           this.notAnswered = this.questionNum - this.answer;
@@ -164,8 +168,8 @@ export default {
         });
     },
     drawPieChart() {
-      this.chartPie = echarts.init(document.getElementById("chartPie"));
-      this.chartPie.setOption({
+      let chartPie = echarts.init(document.getElementById("chartPie"));
+      chartPie.setOption({
         title: {},
         tooltip: {
           trigger: "item",
@@ -196,10 +200,13 @@ export default {
           }
         ]
       });
+      window.addEventListener("resize", function() {
+        chartPie.resize();
+      });
     },
     getScore() {
       axios
-        .get("/java/getAnswerCountLarger0")
+        .get("/" + this.tag + "/getAnswerCountLarger0")
         .then(res => {
           this.positiveScored = res.data;
           this.negativeScored = this.questionNum - this.positiveScored;
@@ -210,8 +217,8 @@ export default {
         });
     },
     drawPieChart_() {
-      this.chartPie = echarts.init(document.getElementById("chartPie_"));
-      this.chartPie.setOption({
+      let chartPie_ = echarts.init(document.getElementById("chartPie_"));
+      chartPie_.setOption({
         title: {},
         tooltip: {
           trigger: "item",
@@ -242,6 +249,9 @@ export default {
           }
         ]
       });
+      window.addEventListener("resize", function() {
+        chartPie_.resize();
+      });
     },
     handleCurrentChange(val) {
       this.currentPage = val;
@@ -249,7 +259,9 @@ export default {
     },
     flash() {
       axios
-        .get("/java/question/5/" + this.currentPage)
+        .get(
+          "/" + this.tag + "/question/" + this.pageSize + "/" + this.currentPage
+        )
         .then(res => {
           this.data = res.data;
         })
@@ -352,7 +364,7 @@ export default {
     },
     getRelatedTags() {
       axios
-        .get("tag/java/16/relationQuick")
+        .get("tag/" + this.tag + "/" + this.relatedTagNum + "/relationQuick")
         .then(res => {
           for (let i = 0; i < res.data.length; i++) {
             this.items[i].label = res.data[i].name;
@@ -366,12 +378,10 @@ export default {
       let limit = [-20, 0, 100, 500, 1000, 5000, 10000, 20000];
       for (let i = 0; i < limit.length - 1; i++) {
         axios
-          .get("/tag/java/" + limit[i] + "/" + limit[i + 1] + "/score")
+          .get(
+            "/tag/" + this.tag + "/" + limit[i] + "/" + limit[i + 1] + "/score"
+          )
           .then(res => {
-            console.log(
-              "/tag/java/" + limit[i] + "/" + limit[i + 1] + "/score"
-            );
-            console.log(res);
             this.barData[i] = res.data;
             this.barGraph();
           })
@@ -379,12 +389,23 @@ export default {
             console.log(error);
           });
       }
+    },
+    getPageCount() {
+      axios
+        .get("/" + this.tag + "/getPageCount/" + this.pageSize)
+        .then(res => {
+          this.pageCount = res.data;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     }
   },
   created() {
     this.getQuestionCount();
   },
   mounted() {
+    this.getPageCount();
     this.flash();
     this.getBarData();
     this.getRelatedTags();
