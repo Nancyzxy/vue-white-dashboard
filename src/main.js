@@ -50,7 +50,7 @@ const router = new VueRouter({
   routes, // short for routes: routes
   linkExactActiveClass: "active"
 });
-axios.defaults.baseURL = "/api"
+axios.defaults.baseURL = "/api";
 Vue.use(VueAxios, axios);
 Vue.use(ElementUI);
 Vue.use(VueRouter);

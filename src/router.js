@@ -1,12 +1,12 @@
 import DashboardLayout from "@/pages/Layout/DashboardLayout.vue";
 
-import Dashboard from "@/pages/Dashboard.vue";
+import Overview from "@/pages/Overview.vue";
 import Icons from "@/pages/Icons.vue";
 import Java from "@/pages/Java.vue";
 import Python from "@/pages/Python.vue";
 import UserProfile from "@/pages/UserProfile.vue";
 import QuestionList from "@/pages/QuestionList.vue";
-import Typography from "@/pages/Typography.vue";
+import TagList from "@/pages/TagList.vue";
 
 const routes = [
   {
@@ -17,7 +17,7 @@ const routes = [
       {
         path: "overview",
         name: "Overview",
-        component: Dashboard
+        component: Overview
       },
       {
         path: "icons",
@@ -45,9 +45,9 @@ const routes = [
         component: QuestionList
       },
       {
-        path: "typography",
-        name: "Typography",
-        component: Typography
+        path: "taglist",
+        name: "TagList",
+        component: TagList
       }
     ]
   }

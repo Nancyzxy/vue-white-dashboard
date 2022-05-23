@@ -2,25 +2,31 @@
   <div class="wrapper">
     <side-bar :background-color="backgroundColor">
       <sidebar-link to="/overview">
-        <i class="tim-icons icon-chart-pie-36"></i>
+        <i class="tim-icons icon-atom"></i>
         <template>
           <p>Overview</p>
         </template>
       </sidebar-link>
       <sidebar-link to="/questionlist">
-        <i class="tim-icons icon-puzzle-10"></i>
+        <i class="tim-icons icon-planet"></i>
         <template>
           <p>QUESTIONLIST</p>
         </template>
       </sidebar-link>
-      <sidebar-link to="/icons">
-        <i class="tim-icons icon-pin"></i>
+      <sidebar-link to="/taglist">
+        <i class="tim-icons icon-planet"></i>
         <template>
           <p>TagList</p>
         </template>
       </sidebar-link>
+<!--      <sidebar-link to="/icons">-->
+<!--        <i class="tim-icons icon-planet"></i>-->
+<!--        <template>-->
+<!--          <p>icons</p>-->
+<!--        </template>-->
+<!--      </sidebar-link>-->
       <sidebar-link to="/java">
-        <i class="tim-icons icon-pin"></i>
+        <i class="tim-icons icon-bell-55"></i>
         <template>
           <p>JAVA</p>
         </template>
@@ -29,6 +35,12 @@
         <i class="tim-icons icon-bell-55"></i>
         <template>
           <p>PYTHON</p>
+        </template>
+      </sidebar-link>
+      <sidebar-link to="/user">
+        <i class="tim-icons icon-bell-55"></i>
+        <template>
+          <p>OTHER</p>
         </template>
       </sidebar-link>
     </side-bar>
