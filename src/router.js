@@ -1,7 +1,6 @@
 import DashboardLayout from "@/pages/Layout/DashboardLayout.vue";
 
 import Overview from "@/pages/Overview.vue";
-import Icons from "@/pages/Icons.vue";
 import Java from "@/pages/Java.vue";
 import Python from "@/pages/Python.vue";
 import Other from "@/pages/other.vue";
@@ -18,11 +17,6 @@ const routes = [
         path: "overview",
         name: "Overview",
         component: Overview
-      },
-      {
-        path: "icons",
-        name: "Icons",
-        component: Icons
       },
       {
         path: "java",

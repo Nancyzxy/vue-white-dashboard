@@ -20,7 +20,7 @@
               </div>
               <div class="col-sm-6" :class="'text-right'">
                 <el-button
-                  type="success"
+                  type="el-icon-search"
                   icon="el-icon-check"
                   circle
                   @click="searchClick"
@@ -29,38 +29,35 @@
             </div>
           </template>
           <div v-show="this.flag == 1">
-            <div id="wordCloud" style="height: 700px; width: 70%}">
-              {{ this.flag }}
-            </div>
+            <div id="wordCloud" style="height: 700px; width: 70%}"></div>
           </div>
           <div v-show="this.flag == 2">
             <div class="table-responsive text-left">
               <el-table border stripe :data="data" style="width: 100%">
-                <el-table-column
-                  prop="question_title"
-                  label="title"
-                  width="360"
-                >
-                </el-table-column>
-                <el-table-column
-                  prop="tags"
-                  label="tags"
-                  width="180"
-                  :formatter="fileData"
-                >
-                </el-table-column>
-                <el-table-column prop="question_link" label="link">
-                  <template v-slot="scope">
-                    <a :href="scope.row.question_link">
-                      {{ scope.row.question_link }}
-                    </a>
-                  </template>
+                <el-table-column prop="name" label="name" width="360">
                 </el-table-column>
                 <el-table-column
                   prop="view_count"
                   label="view_count"
-                  width="120"
+                  width="150"
                 >
+                </el-table-column>
+                <el-table-column
+                  prop="question_cnt"
+                  label="question_count"
+                  width="150"
+                >
+                </el-table-column>
+                <el-table-column
+                  prop="answer_count"
+                  label="answer_count"
+                  width="150"
+                >
+                </el-table-column>
+                <el-table-column label="Analysis">
+                  <sidebar-link to="/other">
+                    Analysis
+                  </sidebar-link>
                 </el-table-column>
               </el-table>
             </div>
@@ -94,25 +91,27 @@ export default {
     searchClick() {
       this.currentPage = 1;
       this.flag = 2;
-      axios
-        .get("/search/" + this.searchQuery + "/question/10/" + this.currentPage)
-        .then(res => {
-          console.log(res);
-          this.data = res.data;
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
+      this.flash();
     },
     flash() {
-      axios
-        .get("/getQuestionsList/10/" + this.currentPage.toString())
-        .then(res => {
-          this.data = res.data;
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
+      if (this.searchQuery !== "") {
+        axios
+          .get(
+            "/search/tag/" +
+              this.searchQuery +
+              "/10/" +
+              this.currentPage.toString()
+          )
+          .then(res => {
+            console.log(res);
+            this.data = res.data;
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+      } else {
+        this.data = [];
+      }
     },
     handleCurrentChange(val) {
       this.currentPage = val;
@@ -156,9 +155,8 @@ export default {
     },
     get50Tags() {
       axios
-        .get("/getTopTags/70")
+        .get("/getTopTagsQuick/70")
         .then(res => {
-          console.log(res);
           for (let i = 0; i < res.data.length; i++) {
             this.echartsData[i].name = res.data[i].name;
           }

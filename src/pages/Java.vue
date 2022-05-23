@@ -106,7 +106,18 @@ export default {
         { type: "success", label: "" },
         { type: "info", label: "" },
         { type: "danger", label: "" },
-        { type: "warning", label: "" }
+        { type: "warning", label: "" },
+        { type: "", label: "" },
+        { type: "success", label: "" },
+        { type: "info", label: "" },
+        { type: "danger", label: "" },
+        { type: "warning", label: "" },
+        { type: "", label: "" },
+        { type: "success", label: "" },
+        { type: "info", label: "" },
+        { type: "danger", label: "" },
+        { type: "warning", label: "" },
+        { type: "", label: "" }
       ],
       range: [
         "<0",
@@ -341,7 +352,7 @@ export default {
     },
     getRelatedTags() {
       axios
-        .get("tag/java/5/relation")
+        .get("tag/java/16/relationQuick")
         .then(res => {
           for (let i = 0; i < res.data.length; i++) {
             this.items[i].label = res.data[i].name;

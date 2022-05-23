@@ -3,10 +3,12 @@
     <div class="card-image" v-if="$slots.image">
       <slot name="image"></slot>
     </div>
-    <div class="card-header" :class="isRTL ? 'text-right' : 'text-left'" v-if="$slots.header || title">
+    <div class="card-header" :class="'text-left'" v-if="$slots.header || title">
       <slot name="header">
-        <h5 class="card-category" v-if="subTitle">{{subTitle}}</h5>
-        <h2 class="card-title"><i v-if="icon" class="tim-icons" :class="icon"></i>{{ title }}</h2>
+        <h5 class="card-category" v-if="subTitle">{{ subTitle }}</h5>
+        <h2 class="card-title">
+          <i v-if="icon" class="tim-icons" :class="icon"></i>{{ title }}
+        </h2>
       </slot>
     </div>
     <div class="card-body" v-if="$slots.default">
@@ -22,20 +24,15 @@
   </div>
 </template>
 <script>
-export default{
-  name:"card",
+export default {
+  name: "card",
   props: {
     title: String,
     subTitle: String,
     type: String,
     icon: String
   },
-  computed:{
-    isRTL() {
-      return this.$rtl.isRTL;
-    }
-  }
-}
+  computed: {}
+};
 </script>
-<style>
-</style>
+<style></style>

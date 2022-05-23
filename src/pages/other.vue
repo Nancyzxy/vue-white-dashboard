@@ -46,10 +46,10 @@
           </template>
           <el-row>
             <el-tag
-                v-for="item in items"
-                :key="item.label"
-                :type="item.type"
-                effect="dark"
+              v-for="item in items"
+              :key="item.label"
+              :type="item.type"
+              effect="dark"
             >
               {{ item.label }}
             </el-tag>
@@ -78,11 +78,11 @@
       </el-table>
       <div class="block">
         <el-pagination
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
-            :page-size="5"
-            layout="total, prev, pager, next, jumper"
-            :total="500000"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-size="5"
+          layout="total, prev, pager, next, jumper"
+          :total="500000"
         >
         </el-pagination>
       </div>
@@ -101,13 +101,24 @@ export default {
   data() {
     return {
       data: [],
-      tag: "mysql",
+      tag: "spring",
       items: [
         { type: "", label: "" },
         { type: "success", label: "" },
         { type: "info", label: "" },
         { type: "danger", label: "" },
-        { type: "warning", label: "" }
+        { type: "warning", label: "" },
+        { type: "", label: "" },
+        { type: "success", label: "" },
+        { type: "info", label: "" },
+        { type: "danger", label: "" },
+        { type: "warning", label: "" },
+        { type: "", label: "" },
+        { type: "success", label: "" },
+        { type: "info", label: "" },
+        { type: "danger", label: "" },
+        { type: "warning", label: "" },
+        { type: "", label: "" }
       ],
       range: [
         "<0",
@@ -131,27 +142,27 @@ export default {
   methods: {
     getQuestionCount() {
       axios
-          .get("/"+this.tag+"/question_count")
-          .then(res => {
-            this.questionNum = res.data;
-            this.getAnswered();
-            this.getScore();
-          })
-          .catch(function(error) {
-            console.log(error);
-          });
+        .get("/" + this.tag + "/question_count")
+        .then(res => {
+          this.questionNum = res.data;
+          this.getAnswered();
+          this.getScore();
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
     getAnswered() {
       axios
-          .get("/"+this.tag+"/getScoreCountLarger0")
-          .then(res => {
-            this.answer = res.data;
-            this.notAnswered = this.questionNum - this.answer;
-            this.drawPieChart();
-          })
-          .catch(function(error) {
-            console.log(error);
-          });
+        .get("/" + this.tag + "/getScoreCountLarger0")
+        .then(res => {
+          this.answer = res.data;
+          this.notAnswered = this.questionNum - this.answer;
+          this.drawPieChart();
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
     drawPieChart() {
       this.chartPie = echarts.init(document.getElementById("chartPie"));
@@ -189,15 +200,15 @@ export default {
     },
     getScore() {
       axios
-          .get("/"+this.tag+"/getAnswerCountLarger0")
-          .then(res => {
-            this.positiveScored = res.data;
-            this.negativeScored = this.questionNum - this.positiveScored;
-            this.drawPieChart_();
-          })
-          .catch(function(error) {
-            console.log(error);
-          });
+        .get("/" + this.tag + "/getAnswerCountLarger0")
+        .then(res => {
+          this.positiveScored = res.data;
+          this.negativeScored = this.questionNum - this.positiveScored;
+          this.drawPieChart_();
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
     drawPieChart_() {
       this.chartPie = echarts.init(document.getElementById("chartPie_"));
@@ -239,13 +250,13 @@ export default {
     },
     flash() {
       axios
-          .get("/"+this.tag+"/question/5/" + this.currentPage)
-          .then(res => {
-            this.data = res.data;
-          })
-          .catch(function(error) {
-            console.log(error);
-          });
+        .get("/" + this.tag + "/question/5/" + this.currentPage)
+        .then(res => {
+          this.data = res.data;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
     barGraph() {
       var myChart = echarts.init(document.getElementById("barChart"));
@@ -342,32 +353,34 @@ export default {
     },
     getRelatedTags() {
       axios
-          .get("tag/"+this.tag+"/5/relation")
-          .then(res => {
-            for (let i = 0; i < res.data.length; i++) {
-              this.items[i].label = res.data[i].name;
-            }
-          })
-          .catch(function(error) {
-            console.log(error);
-          });
+        .get("tag/" + this.tag + "/16/relationQuick")
+        .then(res => {
+          for (let i = 0; i < res.data.length; i++) {
+            this.items[i].label = res.data[i].name;
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
     getBarData() {
       let limit = [-20, 0, 100, 500, 1000, 5000, 10000, 20000];
       for (let i = 0; i < limit.length - 1; i++) {
         axios
-            .get("/tag/"+this.tag+"/" + limit[i] + "/" + limit[i + 1] + "/score")
-            .then(res => {
-              console.log(
-                  "/tag/"+this.tag+ + limit[i] + "/" + limit[i + 1] + "/score"
-              );
-              console.log(res);
-              this.barData[i] = res.data;
-              this.barGraph();
-            })
-            .catch(function(error) {
-              console.log(error);
-            });
+          .get(
+            "/tag/" + this.tag + "/" + limit[i] + "/" + limit[i + 1] + "/score"
+          )
+          .then(res => {
+            console.log(
+              "/tag/" + this.tag + +limit[i] + "/" + limit[i + 1] + "/score"
+            );
+            console.log(res);
+            this.barData[i] = res.data;
+            this.barGraph();
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
       }
     }
   },

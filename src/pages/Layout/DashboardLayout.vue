@@ -19,12 +19,6 @@
           <p>TagList</p>
         </template>
       </sidebar-link>
-<!--      <sidebar-link to="/icons">-->
-<!--        <i class="tim-icons icon-planet"></i>-->
-<!--        <template>-->
-<!--          <p>icons</p>-->
-<!--        </template>-->
-<!--      </sidebar-link>-->
       <sidebar-link to="/java">
         <i class="tim-icons icon-bell-55"></i>
         <template>

@@ -15,54 +15,21 @@
             <span class="navbar-toggler-bar bar3"></span>
           </button>
         </div>
-        <a class="navbar-brand" href="javascript:void(0)" style="text-align: center"> {{ $route.name }}</a>
-      </div>
-
-      <div class="collapse navbar-collapse show text-left" v-show="showMenu">
-        <ul class="navbar-nav" :class="'ml-auto'">
-          <li class="search-bar input-group" @click="searchModalVisible = true">
-            <button
-              class="btn btn-link"
-              id="search-button"
-              data-toggle="modal"
-              data-target="#searchModal"
-            >
-              <i class="tim-icons icon-zoom-split"></i>
-              <span class="d-lg-none d-md-block">Search</span>
-            </button>
-          </li>
-          <modal
-            :show.sync="searchModalVisible"
-            class="modal-search"
-            id="searchModal"
-            :centered="false"
-            :show-close="true"
-          >
-            <input
-              slot="header"
-              v-model="searchQuery"
-              type="text"
-              class="form-control"
-              id="inlineFormInputGroup"
-              placeholder="SEARCH"
-            />
-          </modal>
-        </ul>
+        <h2
+          href="javascript:void(0)"
+          style="text-align: center; color: #1e1e2f"
+        >
+          {{ $route.name }}
+        </h2>
       </div>
     </div>
   </nav>
 </template>
 <script>
-import Modal from "@/components/Modal.vue";
-
 export default {
-  components: {
-    Modal
-  },
+  components: {},
   data() {
     return {
-      searchModalVisible: false,
-      searchQuery: "",
       showMenu: false
     };
   },

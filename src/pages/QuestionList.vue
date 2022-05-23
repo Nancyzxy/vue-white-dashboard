@@ -43,7 +43,7 @@
                   </div>
                   <div class="col-sm-6">
                     <el-button
-                      type="success"
+                      type="el-icon-search"
                       icon="el-icon-check"
                       circle
                       @click="searchClick"
