@@ -3,7 +3,7 @@ import DashboardLayout from "@/pages/Layout/DashboardLayout.vue";
 import Dashboard from "@/pages/Dashboard.vue";
 import Icons from "@/pages/Icons.vue";
 import Java from "@/pages/Java.vue";
-import Notifications from "@/pages/Notifications.vue";
+import Python from "@/pages/Python.vue";
 import UserProfile from "@/pages/UserProfile.vue";
 import QuestionList from "@/pages/QuestionList.vue";
 import Typography from "@/pages/Typography.vue";
@@ -25,14 +25,14 @@ const routes = [
         component: Icons
       },
       {
-        path: "maps",
+        path: "java",
         name: "Java",
         component: Java
       },
       {
-        path: "notifications",
-        name: "Notifications",
-        component: Notifications
+        path: "python",
+        name: "Python",
+        component: Python
       },
       {
         path: "user",

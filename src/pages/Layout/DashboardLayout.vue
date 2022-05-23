@@ -13,30 +13,24 @@
           <p>QUESTIONLIST</p>
         </template>
       </sidebar-link>
-<!--      <sidebar-link to="/icons">-->
-<!--        <i class="tim-icons icon-atom"></i>-->
-<!--        <template>-->
-<!--          <p>1</p>-->
-<!--        </template>-->
-<!--      </sidebar-link>-->
-      <sidebar-link to="/maps">
+      <sidebar-link to="/icons">
+        <i class="tim-icons icon-pin"></i>
+        <template>
+          <p>TagList</p>
+        </template>
+      </sidebar-link>
+      <sidebar-link to="/java">
         <i class="tim-icons icon-pin"></i>
         <template>
           <p>JAVA</p>
         </template>
       </sidebar-link>
-      <sidebar-link to="/notifications">
+      <sidebar-link to="/python">
         <i class="tim-icons icon-bell-55"></i>
         <template>
           <p>PYTHON</p>
         </template>
       </sidebar-link>
-<!--      <sidebar-link to="/user">-->
-<!--        <i class="tim-icons icon-single-02"></i>-->
-<!--        <template>-->
-<!--          <p>C/C++</p>-->
-<!--        </template>-->
-<!--      </sidebar-link>-->
     </side-bar>
     <div class="main-panel" :data="backgroundColor">
       <top-navbar></top-navbar>
