@@ -114,6 +114,7 @@ export default {
   },
   data() {
     return {
+      topTag: 30,
       chartPie: null,
       answer: 0,
       notAnswered: 0,
@@ -129,11 +130,11 @@ export default {
         "Score"
       ],
       descrption: [
-        "This chart describes the number of questions the top 10 tags have",
-        "This chart describes the times the top 10 tags have been watched",
-        "This chart describes the number of answers the top 10 tags' questions have",
-        "This chart describes the highest scores of the top 10 tags' questions",
-        "This chart describes the lowermost scores of the top 10 tags' questions"
+        "This chart describes the number of questions the tags have",
+        "This chart describes the times the tags have been watched",
+        "This chart describes the number of answers the tags' questions have",
+        "This chart describes the highest scores of the tags' questions",
+        "This chart describes the lowermost scores of the tags' questions"
       ],
       BigBarGraph: {
         allData: [[], [], [], [], []],
@@ -208,9 +209,9 @@ export default {
         chartPie.resize();
       });
     },
-    getTop10Tags() {
+    getTopTags() {
       axios
-        .get("/getTopTags/10")
+        .get("/getTopTags/" + this.topTag)
         .then(res => {
           let tags = res.data;
           console.log(tags);
@@ -339,7 +340,7 @@ export default {
   created() {
     this.getTagCount();
     this.getQuestionCount();
-    this.getTop10Tags();
+    this.getTopTags();
   },
   mounted() {}
 };
