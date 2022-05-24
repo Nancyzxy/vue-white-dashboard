@@ -131,15 +131,7 @@ export default {
         { type: "warning", label: "" },
         { type: "", label: "" }
       ],
-      range: [
-        "<0",
-        "0-100",
-        "100-500",
-        "500-1000",
-        "1000-5000",
-        "5000-10000",
-        ">10000"
-      ],
+      range: ["<0", "0", "1-10", "10-50", "50-100", ">100"],
       currentPage: 1,
       chartPie: null,
       answer: 0,
@@ -147,7 +139,7 @@ export default {
       positiveScored: 0,
       negativeScored: 0,
       questionNum: 0,
-      barData: [0, 0, 0, 0, 0, 0, 0],
+      barData: [0, 0, 0, 0, 0, 0],
       pageCount: 0,
       pageSize: 5,
       relatedTagNum: 16
@@ -288,8 +280,7 @@ export default {
         this.range[2],
         this.range[3],
         this.range[4],
-        this.range[5],
-        this.range[6]
+        this.range[5]
       ];
       let barData = this.barData;
       let option = {
@@ -386,7 +377,7 @@ export default {
         });
     },
     getBarData() {
-      let limit = [-20, 0, 100, 500, 1000, 5000, 10000, 20000];
+      let limit = [-20, 0, 1, 10, 50, 100, 20000];
       for (let i = 0; i < limit.length - 1; i++) {
         axios
           .get(
