@@ -33,24 +33,33 @@
           </div>
           <div v-show="this.flag == 2">
             <div class="table-responsive text-left">
-              <el-table border stripe :data="data" style="width: 100%">
-                <el-table-column prop="name" label="name" width="360">
+              <el-table
+                border
+                stripe
+                :data="data"
+                :default-sort="{prop: 'question_cnt', order: 'descending'}"
+                style="width: 100%"
+              >
+                <el-table-column sortable prop="name" label="name" width="360">
                 </el-table-column>
                 <el-table-column
                   prop="view_count"
-                  label="view_count"
+                  sortable
+                  label="view"
                   width="150"
                 >
                 </el-table-column>
                 <el-table-column
                   prop="question_cnt"
-                  label="question_count"
+                  sortable
+                  label="question"
                   width="150"
                 >
                 </el-table-column>
                 <el-table-column
                   prop="answer_count"
-                  label="answer_count"
+                  sortable
+                  label="answer"
                   width="150"
                 >
                 </el-table-column>
