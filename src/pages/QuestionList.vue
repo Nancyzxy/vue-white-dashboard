@@ -5,8 +5,8 @@
         <card>
           <template slot="header">
             <div class="col-sm-6">
-              <h4 class="card-title">All questions are listed here!</h4>
-              <h5 class="card-category">sorted by view_count.</h5>
+              <h4 class="card-title">All questions are listed here</h4>
+              <h5 class="card-category">sorted by view_count</h5>
             </div>
             <div class="col-sm-6">
               <ul class="navbar-nav" :class="'ml-auto'">

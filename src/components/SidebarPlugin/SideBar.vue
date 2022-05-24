@@ -33,7 +33,7 @@ export default {
   props: {
     abv: {
       type: String,
-      default: ":)"
+      default: ""
     },
     title: {
       type: String,

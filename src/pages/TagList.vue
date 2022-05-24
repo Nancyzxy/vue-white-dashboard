@@ -5,7 +5,7 @@
         <card>
           <template slot="header">
             <div class="el-row">
-              <h2 class="card-title">Here are all tags we have!</h2>
+              <h2 class="card-title">Here are all tags we have</h2>
             </div>
             <div class="el-row">
               <div class="col-sm-6">

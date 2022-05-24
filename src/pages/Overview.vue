@@ -116,15 +116,14 @@ export default {
         "QuestionCount",
         "ViewCount",
         "AnswerCount",
-        "MaxScore",
-        "MinScore"
+        "Score"
       ],
       descrption: [
-        "This chart describes the number of questions the top 10 tags have.",
-        "This chart describes the times the top 10 tags have been watched.",
-        "This chart describes the number of answers the top 10 tags' questions have.",
-        "This chart describes the highest scores of the top 10 tags' questions.",
-        "This chart describes the lowermost scores of the top 10 tags' questions."
+        "This chart describes the number of questions the top 10 tags have",
+        "This chart describes the times the top 10 tags have been watched",
+        "This chart describes the number of answers the top 10 tags' questions have",
+        "This chart describes the highest scores of the top 10 tags' questions",
+        "This chart describes the lowermost scores of the top 10 tags' questions"
       ],
       BigBarGraph: {
         allData: [[], [], [], [], []],
@@ -210,8 +209,7 @@ export default {
             this.BigBarGraph.allData[0].push(tags[i].question_cnt);
             this.BigBarGraph.allData[1].push(tags[i].view_count);
             this.BigBarGraph.allData[2].push(tags[i].answer_count);
-            this.BigBarGraph.allData[3].push(tags[i].max_score);
-            this.BigBarGraph.allData[4].push(tags[i].min_score);
+            this.BigBarGraph.allData[3].push(tags[i].score_total);
           }
           this.initBigChart(0);
         })
