@@ -18,6 +18,9 @@
                   <el-tag>
                     {{ descrption[BigBarGraph.activeIndex] }}
                   </el-tag>
+                  <el-button @click="downloadBar">
+                    download
+                  </el-button>
                 </template>
               </div>
               <div class="col-sm-6">
@@ -52,6 +55,7 @@
           <bar-chart
             class="chart-area"
             ref="bigChart"
+            id="bigChart"
             chart-id="big-line-chart"
             :chart-data="BigBarGraph.chartData"
             :gradient-stops="BigBarGraph.gradientStops"
@@ -68,6 +72,9 @@
             <h3 class="card-title">
               Percentage of answered questions
             </h3>
+            <el-button @click="downloadPie1">
+              download
+            </el-button>
           </template>
           <el-row>
             <div id="chartPie" style="width:100%; height:400px;"></div>
@@ -80,6 +87,9 @@
             <h3 class="card-title">
               Percentage of positive scored questions
             </h3>
+            <el-button @click="downloadPie2">
+              download
+            </el-button>
           </template>
           <el-row>
             <div id="chartPie_" style="width:100%; height:400px;"></div>
@@ -300,6 +310,30 @@ export default {
       window.addEventListener("resize", function() {
         chartPie_.resize();
       });
+    },
+    downloadBar() {
+      let mychart = document.getElementsByTagName("canvas")[0];
+      let image = mychart.toDataURL("image/png");
+      let $a = document.createElement("a");
+      $a.setAttribute("href", image);
+      $a.setAttribute("download", "echarts.png");
+      $a.click();
+    },
+    downloadPie1() {
+      let mychart = document.getElementsByTagName("canvas")[1];
+      let image = mychart.toDataURL("image/png");
+      let $a = document.createElement("a");
+      $a.setAttribute("href", image);
+      $a.setAttribute("download", "echarts.png");
+      $a.click();
+    },
+    downloadPie2() {
+      let mychart = document.getElementsByTagName("canvas")[2];
+      let image = mychart.toDataURL("image/png");
+      let $a = document.createElement("a");
+      $a.setAttribute("href", image);
+      $a.setAttribute("download", "echarts.png");
+      $a.click();
     }
   },
   created() {

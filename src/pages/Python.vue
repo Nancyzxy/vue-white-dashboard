@@ -6,6 +6,9 @@
           <el-tag>
             {{ this.tag }}
           </el-tag>
+          <el-button @click="downloadBar">
+            download
+          </el-button>
         </template>
         <el-row>
           <div id="barChart" style="width:100%; height:400px;"></div>
@@ -19,6 +22,9 @@
             <h3 class="card-title">
               Percentage of answered questions
             </h3>
+            <el-button @click="downloadPie1">
+              download
+            </el-button>
           </template>
           <el-row>
             <div id="chartPie" style="width:100%; height:400px;"></div>
@@ -31,6 +37,9 @@
             <h3 class="card-title">
               Percentage of positive scored questions
             </h3>
+            <el-button @click="downloadPie2">
+              download
+            </el-button>
           </template>
           <el-row>
             <div id="chartPie_" style="width:100%; height:400px;"></div>
@@ -46,10 +55,11 @@
           </template>
           <el-row>
             <el-tag
-                v-for="item in items"
-                :key="item.label"
-                :type="item.type"
-                effect="dark"
+              v-for="item in items"
+              :key="item.label"
+              :type="item.type"
+              @click="goToAnalysis(item.label)"
+              effect="dark"
             >
               {{ item.label }}
             </el-tag>
@@ -78,11 +88,11 @@
       </el-table>
       <div class="block">
         <el-pagination
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
-            :page-size="this.pageSize"
-            layout="total, prev, pager, next, jumper"
-            :total="this.pageSize * this.pageCount"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-size="this.pageSize"
+          layout="total, prev, pager, next, jumper"
+          :total="this.pageSize * this.pageCount"
         >
         </el-pagination>
       </div>
@@ -93,6 +103,7 @@
 import { Card } from "@/components/index";
 import echarts from "echarts";
 import axios from "axios";
+import Vue from "vue";
 
 export default {
   components: {
@@ -143,29 +154,33 @@ export default {
     };
   },
   methods: {
+    goToAnalysis(val) {
+      Vue.prototype.$tag = val;
+      this.$router.push({ path: "/other" });
+    },
     getQuestionCount() {
       axios
-          .get("/" + this.tag + "/question_count")
-          .then(res => {
-            this.questionNum = res.data;
-            this.getAnswered();
-            this.getScore();
-          })
-          .catch(function(error) {
-            console.log(error);
-          });
+        .get("/" + this.tag + "/question_count")
+        .then(res => {
+          this.questionNum = res.data;
+          this.getAnswered();
+          this.getScore();
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
     getAnswered() {
       axios
-          .get("/" + this.tag + "/getScoreCountLarger0")
-          .then(res => {
-            this.answer = res.data;
-            this.notAnswered = this.questionNum - this.answer;
-            this.drawPieChart();
-          })
-          .catch(function(error) {
-            console.log(error);
-          });
+        .get("/" + this.tag + "/getAnswerCountLarger0")
+        .then(res => {
+          this.answer = res.data;
+          this.notAnswered = this.questionNum - this.answer;
+          this.drawPieChart();
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
     drawPieChart() {
       let chartPie = echarts.init(document.getElementById("chartPie"));
@@ -206,15 +221,15 @@ export default {
     },
     getScore() {
       axios
-          .get("/" + this.tag + "/getAnswerCountLarger0")
-          .then(res => {
-            this.positiveScored = res.data;
-            this.negativeScored = this.questionNum - this.positiveScored;
-            this.drawPieChart_();
-          })
-          .catch(function(error) {
-            console.log(error);
-          });
+        .get("/" + this.tag + "/getScoreCountLarger0")
+        .then(res => {
+          this.positiveScored = res.data;
+          this.negativeScored = this.questionNum - this.positiveScored;
+          this.drawPieChart_();
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
     drawPieChart_() {
       let chartPie_ = echarts.init(document.getElementById("chartPie_"));
@@ -259,15 +274,15 @@ export default {
     },
     flash() {
       axios
-          .get(
-              "/" + this.tag + "/question/" + this.pageSize + "/" + this.currentPage
-          )
-          .then(res => {
-            this.data = res.data;
-          })
-          .catch(function(error) {
-            console.log(error);
-          });
+        .get(
+          "/" + this.tag + "/question/" + this.pageSize + "/" + this.currentPage
+        )
+        .then(res => {
+          this.data = res.data;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
     barGraph() {
       var myChart = echarts.init(document.getElementById("barChart"));
@@ -364,41 +379,65 @@ export default {
     },
     getRelatedTags() {
       axios
-          .get("tag/" + this.tag + "/" + this.relatedTagNum + "/relationQuick")
-          .then(res => {
-            for (let i = 0; i < res.data.length; i++) {
-              this.items[i].label = res.data[i].name;
-            }
-          })
-          .catch(function(error) {
-            console.log(error);
-          });
+        .get("tag/" + this.tag + "/" + this.relatedTagNum + "/relationQuick")
+        .then(res => {
+          for (let i = 0; i < res.data.length; i++) {
+            this.items[i].label = res.data[i].name;
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
     getBarData() {
       let limit = [-20, 0, 100, 500, 1000, 5000, 10000, 20000];
       for (let i = 0; i < limit.length - 1; i++) {
         axios
-            .get(
-                "/tag/" + this.tag + "/" + limit[i] + "/" + limit[i + 1] + "/score"
-            )
-            .then(res => {
-              this.barData[i] = res.data;
-              this.barGraph();
-            })
-            .catch(function(error) {
-              console.log(error);
-            });
-      }
-    },
-    getPageCount() {
-      axios
-          .get("/" + this.tag + "/getPageCount/" + this.pageSize)
+          .get(
+            "/tag/" + this.tag + "/" + limit[i] + "/" + limit[i + 1] + "/score"
+          )
           .then(res => {
-            this.pageCount = res.data;
+            this.barData[i] = res.data;
+            this.barGraph();
           })
           .catch(function(error) {
             console.log(error);
           });
+      }
+    },
+    getPageCount() {
+      axios
+        .get("/" + this.tag + "/getPageCount/" + this.pageSize)
+        .then(res => {
+          this.pageCount = res.data;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    downloadBar() {
+      let mychart = document.getElementsByTagName("canvas")[0];
+      let image = mychart.toDataURL("image/png");
+      let $a = document.createElement("a");
+      $a.setAttribute("href", image);
+      $a.setAttribute("download", "echarts.png");
+      $a.click();
+    },
+    downloadPie1() {
+      let mychart = document.getElementsByTagName("canvas")[1];
+      let image = mychart.toDataURL("image/png");
+      let $a = document.createElement("a");
+      $a.setAttribute("href", image);
+      $a.setAttribute("download", "echarts.png");
+      $a.click();
+    },
+    downloadPie2() {
+      let mychart = document.getElementsByTagName("canvas")[2];
+      let image = mychart.toDataURL("image/png");
+      let $a = document.createElement("a");
+      $a.setAttribute("href", image);
+      $a.setAttribute("download", "echarts.png");
+      $a.click();
     }
   },
   created() {
